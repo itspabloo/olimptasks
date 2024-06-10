@@ -1,0 +1,83 @@
+// Вася — начинающий математик — решил сделать вклад в развитие этой науки и прославиться на весь мир. 
+// Но как это сделать, когда самые интересные факты, типа теоремы Пифагора, давно уже доказаны? Правильно! Придумать что-то свое, оригинальное. 
+// Вот юный математик и придумал Теорию Функций Васи, посвященную изучению поведения этих самых функций. Функции Васи (ФВ) устроены довольно просто: значением N-й ФВ в точке S
+// будет количество чисел от 1 до N, имеющих сумму цифр S. Вам, как крутым программистам, Вася поручил найти значения миллиардной ФВ (то есть ФВ с N=109), 
+// так как сам он с такой задачей не справится. А Вам слабо?
+
+#include <bits/stdc++.h>//бесполезный комментарий code by pabL0
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#define fasttype ios_base::sync_with_stdio(false); std::cin.tie(nullptr); std::cout.tie(nullptr);
+#define pb push_back
+#define pf push_front
+#define all(a) a.begin(), a.end()
+#define rall(a) a.rbegin(), a.rend()
+#define sz(a) (ll)a.size()
+#define ff first
+#define ss second
+#define MOD (ll)1e9 + 7;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld; 
+using namespace __gnu_pbds;
+using namespace std;
+typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+const string NO = "NO\n";
+const string YES = "YES\n";
+const ll inf = 1e15;
+
+template <typename T>
+istream &operator>>(istream &in, vector<T> &a) {
+    for (auto &x : a) in >> x;
+    return in;
+}
+
+template <typename T>
+ostream &operator<<(ostream &out, vector<T> &a) {
+    for (auto &x : a) out << x <<' ';
+    return out;
+}
+
+template <typename X, typename Y>
+istream &operator>>(istream &in, pair<X, Y> &a) {
+    in >> a.ff >> a.ss;
+    return in;
+}
+
+template <typename X, typename Y>
+ostream &operator<<(ostream &out, pair<X, Y> &a) {
+    out << a.ff << ' ' << a.ss;
+    return out;
+}
+
+void Solve() {
+    ll n;
+    cin >> n;
+    vector<vector<vector<ll>>> dp(10, vector<vector<ll>>(82, vector<ll>(10)));
+    if (n == 1) {
+        cout << 10 << '\n';
+        return;
+    }
+    for (ll x = 0; x <= 9; ++x) dp[1][x][x] = 1; 
+    for (ll i = 2; i <= 9; ++i) {
+        for (ll j = 0; j <= 81; ++j) {
+            for (ll k = 0; k <= min(9ll, j); ++k) {
+                for (ll pon = 0; pon <= 9; ++pon) dp[i][j][k] += dp[i - 1][j - k][pon];
+            }
+        }
+    }
+    ll ans = 0;
+    for (ll i = 1; i < 10; ++i) {
+        for (ll j = 1; j < 10; ++j) ans += dp[i][n][j];
+    }
+    cout << ans << '\n';
+    return;
+}
+
+signed main() {
+    fasttype;
+    int t = 1;
+    // cin >> t;
+    while (t--) Solve();
+    return 0;
+}
